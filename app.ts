@@ -6,8 +6,8 @@ hljs.configure({   // optionally configure hljs
 console.log(hljs);
 var basiceditor  = new Quill('#editor', {
   modules: {
-    syntax: true,              // Include syntax module
-    toolbar: [['code-block']]  // Include button in toolbar
+    syntax: true             // Include syntax module
   },
   theme: 'snow'
 });
+basiceditor.format('code-block','editor');
