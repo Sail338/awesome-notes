@@ -1,5 +1,5 @@
 {
-  "name": "Awesome Notes",
+  "name": "awesome-notes",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.ts",
@@ -9,5 +9,9 @@
   "author": "Srihari Shankar",
   "devDependencies": {
     "electron": "~1.6.2"
+  },
+  "dependencies": {
+    "highlight.js": "^9.12.0",
+    "quill": "^1.2.6"
   }
 }

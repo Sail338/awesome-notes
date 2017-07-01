@@ -1,0 +1,27 @@
+<link href="https://cdn.quilljs.com/1.2.6/quill.snow.css" rel="stylesheet">
+
+<!-- Create the editor container -->
+<div id="editor">
+  <p>Hello World!</p>
+  <p>Some initial <strong>bold</strong> text</p>
+  <p><br></p>
+</div>
+
+<!-- Include the Quill library -->
+<script src="highlight.pack.js"></script>
+<script src="https://cdn.quilljs.com/1.2.6/quill.js"></script>
+<link href="highlight/styles/tomorrow-night.css" rel="stylesheet">
+<!-- Initialize Quill editor -->
+<script>
+hljs.configure({   // optionally configure hljs
+  languages: ['javascript', 'ruby', 'python']
+});
+
+var quill = new Quill('#editor', {
+  modules: {
+    syntax: true,              // Include syntax module
+    toolbar: [['code-block']]  // Include button in toolbar
+  },
+  theme: 'snow'
+});
+</script>
