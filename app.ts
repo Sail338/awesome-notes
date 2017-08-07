@@ -1,12 +1,9 @@
 const electron = require('electron');
 var Quill  = require('Quill');
 var Mousetrap = require('mousetrap');
-hljs.configure({   // optionally configure hljs
-  languages: ['javascript', 'ruby', 'python']
-});
+var $ = require('jquery');
 function createNewCodeBlock(){
-	console.log("Caught command");
-
+	
    var div = document.createElement('div');
 		    var heading = document.createElement('h3');
 		    var notes = document.createElement('div');
@@ -22,9 +19,23 @@ function createNewCodeBlock(){
  	 theme: 'bubble'
 	});
 	basiceditor.format('code-block','code-block');
+	basiceditor.focus();
+
+		basiceditor.focus();
+		basiceditor.keyboard.addBinding({
+			key:'escape',
+			handler: function(range) {
+				console.log("clicking body");
+		    	basiceditor.blur();
+		}
+
+
+		});
 }
 
+
 function createTextBlock(){
+	
    var div = document.createElement('div');
 		    var heading = document.createElement('h3');
 		    var notes = document.createElement('div');
@@ -33,9 +44,20 @@ function createTextBlock(){
 
 		div.appendChild(notes);
 		document.body.appendChild(notes);
-		    new Quill(notes, {
-					      theme: 'snow'
-					    });
+		  var edit =   new Quill(notes, {
+					      theme: 'bubble'
+		  });
+		edit.focus();
+		edit.keyboard.addBinding({
+			key:'escape',
+			handler: function(range) {
+				console.log("clicking body");
+			   edit.blur();
+		}
+
+
+		});
+		 
 }
 
 Mousetrap.stopCallback = function () {
