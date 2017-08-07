@@ -20,8 +20,7 @@ function createNewCodeBlock(){
 	});
 	basiceditor.format('code-block','code-block');
 	basiceditor.focus();
-
-		basiceditor.focus();
+		
 		basiceditor.keyboard.addBinding({
 			key:'escape',
 			handler: function(range) {
@@ -31,6 +30,7 @@ function createNewCodeBlock(){
 
 
 		});
+		 
 }
 
 
@@ -48,7 +48,7 @@ function createTextBlock(){
 					      theme: 'bubble'
 		  });
 		edit.focus();
-		edit.keyboard.addBinding({
+			edit.keyboard.addBinding({
 			key:'escape',
 			handler: function(range) {
 				console.log("clicking body");
@@ -58,6 +58,7 @@ function createTextBlock(){
 
 		});
 		 
+		 
 }
 
 Mousetrap.stopCallback = function () {
@@ -66,8 +67,12 @@ Mousetrap.stopCallback = function () {
 
 
 
-Mousetrap.bind('command+s', function() { createNewCodeBlock() });
-Mousetrap.bind('command+t', function() { createTextBlock() });
+Mousetrap.bind('command+s', function() {
+		createNewCodeBlock()
+});
+Mousetrap.bind('command+t', function() {
+		
+		createTextBlock() });
 
 
 
