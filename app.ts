@@ -30,13 +30,33 @@ function createNewCodeBlock(){
 
 
 		});
+
+		basiceditor.keyboard.addBinding({
+		key:'s',
+		metaKey:true,
+		handler: function(range) {
+				createNewCodeBlock();
+		}
+
+
+		});
+
+		basiceditor.keyboard.addBinding({
+		key:'t',
+		metaKey:true,
+		handler: function(range) {
+				createTextBlock();
+		}
+
+
+		});
 		 
 }
 
 
 function createTextBlock(){
 	
-   var div = document.createElement('div');
+		    var div = document.createElement('div');
 		    var heading = document.createElement('h3');
 		    var notes = document.createElement('div');
 
@@ -48,16 +68,35 @@ function createTextBlock(){
 					      theme: 'bubble'
 		  });
 		edit.focus();
-			edit.keyboard.addBinding({
-			key:'escape',
-			handler: function(range) {
+		edit.keyboard.addBinding({
+		key:'escape',
+		handler: function(range) {
 				console.log("clicking body");
-			   edit.blur();
+			    edit.blur();
 		}
 
 
 		});
 		 
+		edit.keyboard.addBinding({
+		key:'s',
+		metaKey:true,
+		handler: function(range) {
+				createNewCodeBlock();
+		}
+
+
+		});
+
+		edit.keyboard.addBinding({
+		key:'t',
+		metaKey:true,
+		handler: function(range) {
+				createTextBlock();
+		}
+
+
+		});
 		 
 }
 
