@@ -2,6 +2,7 @@ const electron = require('electron');
 var Quill  = require('Quill');
 var Mousetrap = require('mousetrap');
 var $ = require('jquery');
+var quill_arr = [];
 function createNewCodeBlock(){
 	
    var div = document.createElement('div');
@@ -20,37 +21,8 @@ function createNewCodeBlock(){
 	});
 	basiceditor.format('code-block','code-block');
 	basiceditor.focus();
-		
-		basiceditor.keyboard.addBinding({
-			key:'escape',
-			handler: function(range) {
-				console.log("clicking body");
-		    	basiceditor.blur();
-		}
-
-
-		});
-
-		basiceditor.keyboard.addBinding({
-		key:'s',
-		metaKey:true,
-		handler: function(range) {
-				createNewCodeBlock();
-		}
-
-
-		});
-
-		basiceditor.keyboard.addBinding({
-		key:'t',
-		metaKey:true,
-		handler: function(range) {
-				createTextBlock();
-		}
-
-
-		});
-		 
+	bindKeys( basiceditor);		
+	quill_arr.push(basiceditor);
 }
 
 
@@ -68,16 +40,37 @@ function createTextBlock(){
 					      theme: 'bubble'
 		  });
 		edit.focus();
+		bindKeys(edit);
+		quill_arr.push(edit);
+		 
+}
+
+Mousetrap.stopCallback = function () {
+		     return false;
+}
+
+
+
+Mousetrap.bind('command+s', function() {
+		createNewCodeBlock()
+});
+Mousetrap.bind('command+t', function() {
+		
+		createTextBlock() });
+
+
+function bindKeys(edit){
+	 
 		edit.keyboard.addBinding({
-		key:'escape',
-		handler: function(range) {
+			key:'escape',
+			handler: function(range) {
 				console.log("clicking body");
-			    edit.blur();
+		    	edit.blur();
 		}
 
 
 		});
-		 
+
 		edit.keyboard.addBinding({
 		key:'s',
 		metaKey:true,
@@ -97,22 +90,5 @@ function createTextBlock(){
 
 
 		});
-		 
+
 }
-
-Mousetrap.stopCallback = function () {
-		     return false;
-}
-
-
-
-Mousetrap.bind('command+s', function() {
-		createNewCodeBlock()
-});
-Mousetrap.bind('command+t', function() {
-		
-		createTextBlock() });
-
-
-
-
