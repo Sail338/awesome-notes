@@ -2,6 +2,7 @@ const electron = require('electron');
 var Quill  = require('Quill');
 var Mousetrap = require('mousetrap');
 var $ = require('jquery');
+const fs = require('fs');
 var quill_arr = [];
 function createNewCodeBlock(){
 	
@@ -92,3 +93,25 @@ function bindKeys(edit){
 		});
 
 }
+function save(){
+		var arrs = []
+		for(var i=0; i<quill_arr.length;i++){
+			var delta = quill_arr[i].getContents();
+			arrs.push(delta);
+			fs.writeFile("./object.json", JSON.stringify(arrs), (err) => {
+		    if (err) {
+        		console.error(err);
+        		return;
+    		};
+  		  	console.log("File has been created");
+			});
+
+
+
+		}
+
+
+}
+$('#savebutton').on('click', function() {
+		save();
+});
