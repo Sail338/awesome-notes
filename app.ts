@@ -91,6 +91,9 @@ function bindKeys(edit){
 
 
 		});
+edit.on('text-change', function (delta, source) {
+		save();
+});
 
 }
 function save(){
