@@ -11,130 +11,152 @@ shell.config.execPath = shell.which('node')
 var quill_arr: any = [];
 
 
-function compileAndRunPython(code:any,notes:HTMLDivElement){
-			fs.writeFile(".python.py", code, (err: any) => {
-			if (err) {
-				console.error(err);
-				return;
-			};
-			console.log("File has been created");
-			var child = shell.exec('python .python.py').stdout;
-			shell.exec('python .python.py', function (code, stdout:string, stderr) {
-				if(stderr){
-					alert("Error Occured:" +stderr);
-				}
+function compileAndRunPython(code: any, notes: HTMLDivElement) {
+	fs.writeFile(".python.py", code, (err: any) => {
+		if (err) {
+			console.error(err);
+			return;
+		};
+		console.log("File has been created");
+		var child = shell.exec('python .python.py').stdout;
+		shell.exec('python .python.py', function (code, stdout: string, stderr) {
+			if (stderr) {
+				alert("Error Occured:" + stderr);
+			}
 
-				appendToStdOut(stdout,notes);
-			});
+			appendToStdOut(stdout, notes);
 		});
+	});
 
 }
-function compileAndRunC(code:any,notes:HTMLDivElement){
-		
-
-		fs.writeFile(".tmp.c", code, (err: any) => {
-			if (err) {
-				console.error(err);
-				return;
-			};
-		
-			
-			shell.exec('gcc .tmp.c', function (code, stdout, stderr) {
-
-				if (stderr) {
-					alert("Error Occured: " + stderr)
-					return;
-				}
+function compileAndRunC(code: any, notes: HTMLDivElement) {
+	fs.writeFile(".tmp.c", code, (err: any) => {
+		if (err) {
+			console.error(err);
+			return;
+		};
 
 
+		shell.exec('gcc .tmp.c', function (code, stdout, stderr) {
 
-				shell.exec('./a.out', function (code, stdout, stderr) {
-
-
-					appendToStdOut(stdout,notes);
-				});
-
-
-			});
-		}
-
-		)
-	}
-	function compileAndRunHaskell(code:any,notes:HTMLDivElement){
-			fs.writeFile(".tmp.hs", code, (err: any) => {
-			if (err) {
-				console.error(err);
-				return;
-			};
-
-			shell.exec('runhaskell .tmp.hs', function (code, stdout, stderr) {
-
-				if (stderr) {
-					alert("Error Occured: " + stderr)
-					return;
-				}
-				if (stdout) {
-									appendToStdOut(stdout,notes);
-				}
-
-
-
-			});
-		}
-
-		)
-		
-	}
-	function compileAndRunJava(code:any,notes:HTMLDivElement){
-			var jtree = japa.parse(code)
-			console.log(jtree)
-			var clasname = jtree.types[0].name.identifier;
-			if(clasname === null){
-				alert("Invalid ClassName try again")
+			if (stderr) {
+				alert("Error Occured: " + stderr)
 				return;
 			}
-		fs.writeFile(clasname+".java", code, (err: any) => {
-			if (err) {
-				console.error(err);
-				return;
-			};
-		
-			
-			shell.exec('javac '+ clasname +'.java', function (code, stdout, stderr) {
-
-				if (stderr) {
-					alert("Error Occured: " + stderr)
-					return;
-				}
 
 
 
-				shell.exec('java ' + clasname, function (code, stdout, stderr) {
+			shell.exec('./a.out', function (code, stdout, stderr) {
 
 
-					appendToStdOut(stdout,notes);
-				});
-
-
+				appendToStdOut(stdout, notes);
 			});
-		}
 
-		)
+
+		});
 	}
 
-	function appendToStdOut(stdout:string,notes:HTMLDivElement){
-				if(stdout){
-					console.log("reached hard")
-					var heading = document.createElement('p');
-					heading.innerHTML = stdout;
-					console.log(stdout)
-					console.log(heading.innerHTML)
-					notes.appendChild(heading)
+	)
+}
+function compileAndRunHaskell(code: any, notes: HTMLDivElement) {
+	fs.writeFile(".tmp.hs", code, (err: any) => {
+		if (err) {
+			console.error(err);
+			return;
+		};
 
-		}
+		shell.exec('runhaskell .tmp.hs', function (code, stdout, stderr) {
+
+			if (stderr) {
+				alert("Error Occured: " + stderr)
+				return;
+			}
+			if (stdout) {
+				appendToStdOut(stdout, notes);
+			}
+
+
+
+		});
 	}
 
-console.log(hljs.listLanguages())
+	)
+
+}
+function compileAndRunJava(code: any, notes: HTMLDivElement) {
+	var jtree = japa.parse(code)
+	console.log(jtree)
+	var clasname = jtree.types[0].name.identifier;
+	if (clasname === null) {
+		alert("Invalid ClassName try again")
+		return;
+	}
+	fs.writeFile(clasname + ".java", code, (err: any) => {
+		if (err) {
+			console.error(err);
+			return;
+		};
+
+
+		shell.exec('javac ' + clasname + '.java', function (code, stdout, stderr) {
+
+			if (stderr) {
+				alert("Error Occured: " + stderr)
+				return;
+			}
+
+
+
+			shell.exec('java ' + clasname, function (code, stdout, stderr) {
+
+
+				appendToStdOut(stdout, notes);
+			});
+
+
+		});
+	}
+
+	)
+}
+function compileAndRunJavaScript(code:any,notes:HTMLDivElement){
+	
+	fs.writeFile(".tmp.js", code, (err: any) => {
+		if (err) {
+			console.error(err);
+			return;
+		};
+
+		shell.exec('node  .tmp.js', function (code, stdout, stderr) {
+
+			if (stderr) {
+				alert("Error Occured: " + stderr)
+				return;
+			}
+			if (stdout) {
+				appendToStdOut(stdout, notes);
+			}
+
+
+
+		});
+	}
+
+	)
+
+}
+function appendToStdOut(stdout: string, notes: HTMLDivElement) {
+	if (stdout) {
+		console.log("reached hard")
+		var heading = document.createElement('p');
+		heading.innerHTML = stdout;
+		console.log(stdout)
+		console.log(heading.innerHTML)
+		notes.appendChild(heading)
+
+	}
+}
+
 hljs.configure({   // optionally configure hljs
 	languages: langs
 });
@@ -272,20 +294,24 @@ function compileCode(code: any, notes: HTMLDivElement) {
 	}
 	console.log(lang)
 	if (lang === 'python') {
-			compileAndRunPython(code,notes)
+		compileAndRunPython(code, notes)
 
 	}
 	else if (lang == 'java') {
 		//get the word after class
-		compileAndRunJava(code,notes)
+		compileAndRunJava(code, notes)
 	}
 
-	else if (lang == 'haskell') {
-		compileAndRunHaskell(code,notes)
-	} 
-	else if(lang == 'c'){
-		compileAndRunC(code,notes);
+	else if (lang === 'haskell') {
+		compileAndRunHaskell(code, notes)
 	}
+	else if (lang === 'c') {
+		compileAndRunC(code, notes);
+	}
+		else if(lang === 'javascript'){
+			compileAndRunJavaScript(code,notes);
+
+			}
 
 
 }
@@ -304,22 +330,27 @@ function bindCode(edit: any, notes: HTMLDivElement) {
 }
 
 function parseFirstLine(inputStr: string) {
-	const comments: string[] = ['//', '#', '--']
+	const comments: string[] = ['\//', '#', '--']
 	var doesFirstLineContain: boolean = false;
 	for (var j = 0; j < comments.length; j++) {
-		if (inputStr.includes(comments[i])) {
+		console.log(comments[j])
+		if (inputStr.includes(comments[j])) {
+			
 			doesFirstLineContain = true;
 		}
 	}
 	if (doesFirstLineContain === false) {
 		return "";
 	}
+	console.log("got here")
 	for (var i = 0; i < langs.length; i++) {
 		if (inputStr.includes(langs[i])) {
+			
 			if (inputStr.includes('java') && !inputStr.includes('javascript')) {
 				return 'java'
 			}
 			else if (inputStr.includes('javascript')) {
+				console.log("saw js")
 				return 'javascript'
 			}
 			else {
@@ -331,6 +362,5 @@ function parseFirstLine(inputStr: string) {
 	return "";
 
 }
-
 
 
