@@ -9,6 +9,131 @@ const langs: string[] = ['java', 'python', 'c', 'haskell', 'javascript']
 declare var hljs: any;
 shell.config.execPath = shell.which('node')
 var quill_arr: any = [];
+
+
+function compileAndRunPython(code:any,notes:HTMLDivElement){
+			fs.writeFile(".python.py", code, (err: any) => {
+			if (err) {
+				console.error(err);
+				return;
+			};
+			console.log("File has been created");
+			var child = shell.exec('python .python.py').stdout;
+			shell.exec('python .python.py', function (code, stdout:string, stderr) {
+				if(stderr){
+					alert("Error Occured:" +stderr);
+				}
+
+				appendToStdOut(stdout,notes);
+			});
+		});
+
+}
+function compileAndRunC(code:any,notes:HTMLDivElement){
+		
+
+		fs.writeFile(".tmp.c", code, (err: any) => {
+			if (err) {
+				console.error(err);
+				return;
+			};
+		
+			
+			shell.exec('gcc .tmp.c', function (code, stdout, stderr) {
+
+				if (stderr) {
+					alert("Error Occured: " + stderr)
+					return;
+				}
+
+
+
+				shell.exec('./a.out', function (code, stdout, stderr) {
+
+
+					appendToStdOut(stdout,notes);
+				});
+
+
+			});
+		}
+
+		)
+	}
+	function compileAndRunHaskell(code:any,notes:HTMLDivElement){
+			fs.writeFile(".tmp.hs", code, (err: any) => {
+			if (err) {
+				console.error(err);
+				return;
+			};
+
+			shell.exec('runhaskell .tmp.hs', function (code, stdout, stderr) {
+
+				if (stderr) {
+					alert("Error Occured: " + stderr)
+					return;
+				}
+				if (stdout) {
+									appendToStdOut(stdout,notes);
+				}
+
+
+
+			});
+		}
+
+		)
+		
+	}
+	function compileAndRunJava(code:any,notes:HTMLDivElement){
+			var jtree = japa.parse(code)
+			console.log(jtree)
+			var clasname = jtree.types[0].name.identifier;
+			if(clasname === null){
+				alert("Invalid ClassName try again")
+				return;
+			}
+		fs.writeFile(clasname+".java", code, (err: any) => {
+			if (err) {
+				console.error(err);
+				return;
+			};
+		
+			
+			shell.exec('javac '+ clasname +'.java', function (code, stdout, stderr) {
+
+				if (stderr) {
+					alert("Error Occured: " + stderr)
+					return;
+				}
+
+
+
+				shell.exec('java ' + clasname, function (code, stdout, stderr) {
+
+
+					appendToStdOut(stdout,notes);
+				});
+
+
+			});
+		}
+
+		)
+	}
+
+	function appendToStdOut(stdout:string,notes:HTMLDivElement){
+				if(stdout){
+					console.log("reached hard")
+					var heading = document.createElement('p');
+					heading.innerHTML = stdout;
+					console.log(stdout)
+					console.log(heading.innerHTML)
+					notes.appendChild(heading)
+
+		}
+	}
+
 console.log(hljs.listLanguages())
 hljs.configure({   // optionally configure hljs
 	languages: langs
@@ -147,95 +272,19 @@ function compileCode(code: any, notes: HTMLDivElement) {
 	}
 	console.log(lang)
 	if (lang === 'python') {
-		fs.writeFile(".python.py", code, (err: any) => {
-			if (err) {
-				console.error(err);
-				return;
-			};
-			console.log("File has been created");
-			var child = shell.exec('python .python.py').stdout;
-			shell.exec('python .python.py', function (code, stdout, stderr) {
-
-
-				console.log("reached hard")
-				var heading = document.createElement('h1');
-				heading.innerHTML = stdout;
-				console.log(heading.innerHTML)
-				notes.appendChild(heading)
-			});
-		});
+			compileAndRunPython(code,notes)
 
 	}
 	else if (lang == 'java') {
 		//get the word after class
-			var jtree = japa.parse(code)
-			console.log(jtree)
-			var clasname = jtree.types[0].name.identifier;
-			if(clasname === null){
-				alert("Invalid ClassName try again")
-				return;
-			}
-		fs.writeFile(clasname+".java", code, (err: any) => {
-			if (err) {
-				console.error(err);
-				return;
-			};
-		
-			
-			shell.exec('javac '+ clasname +'.java', function (code, stdout, stderr) {
-
-				if (stderr) {
-					alert("Error Occured: " + stderr)
-					return;
-				}
-
-
-
-				shell.exec('java ' + clasname, function (code, stdout, stderr) {
-
-
-					console.log("reached hard")
-					var heading = document.createElement('h1');
-					heading.innerHTML = stdout;
-					console.log(stdout)
-					console.log(heading.innerHTML)
-					notes.appendChild(heading)
-				});
-
-
-			});
-		}
-
-		)
+		compileAndRunJava(code,notes)
 	}
 
 	else if (lang == 'haskell') {
-		fs.writeFile(".tmp.hs", code, (err: any) => {
-			if (err) {
-				console.error(err);
-				return;
-			};
-
-			shell.exec('runhaskell .tmp.hs', function (code, stdout, stderr) {
-
-				if (stderr) {
-					alert("Error Occured: " + stderr)
-					return;
-				}
-				if (stdout) {
-					var heading = document.createElement('h1');
-					heading.innerHTML = stdout;
-					console.log(stdout)
-					console.log(heading.innerHTML)
-					notes.appendChild(heading)
-				}
-
-
-
-			});
-		}
-
-		)
+		compileAndRunHaskell(code,notes)
+	} 
+	else if(lang == 'c'){
+		compileAndRunC(code,notes);
 	}
 
 
@@ -282,4 +331,6 @@ function parseFirstLine(inputStr: string) {
 	return "";
 
 }
+
+
 
