@@ -3,14 +3,14 @@ const Quill = require('Quill');
 const Mousetrap = require('mousetrap');
 const $ = require('jquery');
 const fs = require('fs');
-const pythonshell = require('python-shell');
 const shell = require('shelljs')
+const langs:string[] = ['java','python','c','haskell','javascript']
 declare var hljs: any;
 shell.config.execPath = shell.which('node')
 var quill_arr: any = [];
 console.log(hljs.listLanguages())
 hljs.configure({   // optionally configure hljs
-	languages: ['java', 'python', 'c','haskell','javascript']
+	languages: langs
 });
 function createNewCodeBlock() {
 
@@ -134,9 +134,16 @@ $('#savebutton').on('click', function () {
 //this functions compiles a selection of code
 function compileCode(code: any, notes: HTMLDivElement) {
 	console.log(code)
+	var lang = "";
+	
 	code = code.replace(/[^\x00-\x7F]/g, "");
-	console.log(hljs.highlightAuto(code));
-	var lang = hljs.highlightAuto(code).language;
+	var firstline:string = code.split('\n')[0];
+	lang = parseFirstLine(firstline);
+	console.log(firstline);
+
+	if(lang === ""){
+		 lang = hljs.highlightAuto(code).language;
+	}
 	console.log(lang)
 	if (lang === 'python') {
 		fs.writeFile(".python.py", code, (err: any) => {
@@ -231,11 +238,38 @@ function bindCode(edit: any, notes: HTMLDivElement) {
 		key: 'j',
 		metaKey: true,
 		handler: function (range: any) {
-			console.log("called")
 			compileCode(edit.getText(), notes);
 		}
 	});
 
 }
 
+function parseFirstLine(inputStr:string){
+	const comments:string[] = ['//','#','--']
+	var doesFirstLineContain:boolean = false;
+	for(var j=0;j<comments.length;j++){
+		if(inputStr.includes(comments[i])){
+			doesFirstLineContain = true;
+		}
+	}
+	if (doesFirstLineContain === false){
+		return "";
+	}
+	for(var i=0;i<langs.length;i++){
+		if(inputStr.includes(langs[i])){
+			if(inputStr.includes('java') && !inputStr.includes('javascript')){
+				return 'java'
+			}
+			else if(inputStr.includes('javascript')){
+				return 'javascript'
+			}
+			else{
+				return langs[i];
+			}
+		}
+	}
+
+	return "";
+
+}
 
