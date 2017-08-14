@@ -4,7 +4,8 @@ const Mousetrap = require('mousetrap');
 const $ = require('jquery');
 const fs = require('fs');
 const shell = require('shelljs')
-const langs:string[] = ['java','python','c','haskell','javascript']
+const japa = require('java-parser');
+const langs: string[] = ['java', 'python', 'c', 'haskell', 'javascript']
 declare var hljs: any;
 shell.config.execPath = shell.which('node')
 var quill_arr: any = [];
@@ -135,14 +136,14 @@ $('#savebutton').on('click', function () {
 function compileCode(code: any, notes: HTMLDivElement) {
 	console.log(code)
 	var lang = "";
-	
+
 	code = code.replace(/[^\x00-\x7F]/g, "");
-	var firstline:string = code.split('\n')[0];
+	var firstline: string = code.split('\n')[0];
 	lang = parseFirstLine(firstline);
 	console.log(firstline);
 
-	if(lang === ""){
-		 lang = hljs.highlightAuto(code).language;
+	if (lang === "") {
+		lang = hljs.highlightAuto(code).language;
 	}
 	console.log(lang)
 	if (lang === 'python') {
@@ -166,13 +167,22 @@ function compileCode(code: any, notes: HTMLDivElement) {
 
 	}
 	else if (lang == 'java') {
-		fs.writeFile("tmp.java", code, (err: any) => {
+		//get the word after class
+			var jtree = japa.parse(code)
+			console.log(jtree)
+			var clasname = jtree.types[0].name.identifier;
+			if(clasname === null){
+				alert("Invalid ClassName try again")
+				return;
+			}
+		fs.writeFile(clasname+".java", code, (err: any) => {
 			if (err) {
 				console.error(err);
 				return;
 			};
-
-			shell.exec('javac tmp.java', function (code, stdout, stderr) {
+		
+			
+			shell.exec('javac '+ clasname +'.java', function (code, stdout, stderr) {
 
 				if (stderr) {
 					alert("Error Occured: " + stderr)
@@ -181,7 +191,7 @@ function compileCode(code: any, notes: HTMLDivElement) {
 
 
 
-				shell.exec('java tmp', function (code, stdout, stderr) {
+				shell.exec('java ' + clasname, function (code, stdout, stderr) {
 
 
 					console.log("reached hard")
@@ -199,7 +209,7 @@ function compileCode(code: any, notes: HTMLDivElement) {
 		)
 	}
 
-		else if (lang == 'haskell') {
+	else if (lang == 'haskell') {
 		fs.writeFile(".tmp.hs", code, (err: any) => {
 			if (err) {
 				console.error(err);
@@ -212,7 +222,7 @@ function compileCode(code: any, notes: HTMLDivElement) {
 					alert("Error Occured: " + stderr)
 					return;
 				}
-				if(stdout){
+				if (stdout) {
 					var heading = document.createElement('h1');
 					heading.innerHTML = stdout;
 					console.log(stdout)
@@ -220,7 +230,7 @@ function compileCode(code: any, notes: HTMLDivElement) {
 					notes.appendChild(heading)
 				}
 
-					
+
 
 			});
 		}
@@ -228,7 +238,7 @@ function compileCode(code: any, notes: HTMLDivElement) {
 		)
 	}
 
-	
+
 }
 
 
@@ -244,26 +254,26 @@ function bindCode(edit: any, notes: HTMLDivElement) {
 
 }
 
-function parseFirstLine(inputStr:string){
-	const comments:string[] = ['//','#','--']
-	var doesFirstLineContain:boolean = false;
-	for(var j=0;j<comments.length;j++){
-		if(inputStr.includes(comments[i])){
+function parseFirstLine(inputStr: string) {
+	const comments: string[] = ['//', '#', '--']
+	var doesFirstLineContain: boolean = false;
+	for (var j = 0; j < comments.length; j++) {
+		if (inputStr.includes(comments[i])) {
 			doesFirstLineContain = true;
 		}
 	}
-	if (doesFirstLineContain === false){
+	if (doesFirstLineContain === false) {
 		return "";
 	}
-	for(var i=0;i<langs.length;i++){
-		if(inputStr.includes(langs[i])){
-			if(inputStr.includes('java') && !inputStr.includes('javascript')){
+	for (var i = 0; i < langs.length; i++) {
+		if (inputStr.includes(langs[i])) {
+			if (inputStr.includes('java') && !inputStr.includes('javascript')) {
 				return 'java'
 			}
-			else if(inputStr.includes('javascript')){
+			else if (inputStr.includes('javascript')) {
 				return 'javascript'
 			}
-			else{
+			else {
 				return langs[i];
 			}
 		}
