@@ -8,8 +8,9 @@ const shell = require('shelljs')
 declare var hljs: any;
 shell.config.execPath = shell.which('node')
 var quill_arr: any = [];
+console.log(hljs.listLanguages())
 hljs.configure({   // optionally configure hljs
-	languages: ['javascript', 'java', 'python', 'c', 'ruby']
+	languages: ['java', 'python', 'c','haskell','javascript']
 });
 function createNewCodeBlock() {
 
@@ -134,6 +135,7 @@ $('#savebutton').on('click', function () {
 function compileCode(code: any, notes: HTMLDivElement) {
 	console.log(code)
 	code = code.replace(/[^\x00-\x7F]/g, "");
+	console.log(hljs.highlightAuto(code));
 	var lang = hljs.highlightAuto(code).language;
 	console.log(lang)
 	if (lang === 'python') {
@@ -188,7 +190,38 @@ function compileCode(code: any, notes: HTMLDivElement) {
 		}
 
 		)
-	};
+	}
+
+		else if (lang == 'haskell') {
+		fs.writeFile(".tmp.hs", code, (err: any) => {
+			if (err) {
+				console.error(err);
+				return;
+			};
+
+			shell.exec('runhaskell .tmp.hs', function (code, stdout, stderr) {
+
+				if (stderr) {
+					alert("Error Occured: " + stderr)
+					return;
+				}
+				if(stdout){
+					var heading = document.createElement('h1');
+					heading.innerHTML = stdout;
+					console.log(stdout)
+					console.log(heading.innerHTML)
+					notes.appendChild(heading)
+				}
+
+					
+
+			});
+		}
+
+		)
+	}
+
+	
 }
 
 
