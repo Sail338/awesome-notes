@@ -147,13 +147,21 @@ function compileAndRunJavaScript(code: any, notes: HTMLDivElement) {
 }
 function appendToStdOut(stdout: string, notes: HTMLDivElement) {
 	if (stdout) {
-		
+				
 		console.log("reached hard")
 		var di = document.createElement("div")
+		//var hr = document.createElement("hr")
+		var out = document.createElement("h1")
+		out.innerHTML = "Output:"
+		di.appendChild(out);
+		var div = document.createElement("div")
+		out.appendChild(div)
+	
+		//di.appendChild(hr)
 		notes.appendChild(di)
+		
 	
-	
-		var edit = new Quill(di, {
+		var edit = new Quill(div, {
 		theme: 'bubble'
 	
 		});
@@ -165,7 +173,7 @@ function appendToStdOut(stdout: string, notes: HTMLDivElement) {
 		notes.focus();
 
 	
-		//di.appendChild(heading)
+
 
 	}
 		
@@ -176,16 +184,17 @@ hljs.configure({   // optionally configure hljs
 });
 function createNewCodeBlock() {
 
-	var heading = document.createElement('h3');
+
 	var notes = document.createElement('div');
 
-
+	//notes.setAttribute("id",'code')
 
 
 	document.body.appendChild(notes);
 	var basiceditor = new Quill(notes, {
 		modules: {
-			syntax: true             // Include syntax module
+			syntax: true ,
+			toolbar:false            // Include syntax module
 		},
 		theme: 'bubble'
 	});
@@ -205,11 +214,14 @@ function createTextBlock() {
 	var notes = document.createElement('div');
 
 
-
+	
 	
 	document.body.appendChild(notes);
 	var edit = new Quill(notes, {
-		theme: 'bubble'
+		theme: 'snow',
+		  "modules": {
+     		 "toolbar": false
+  		}
 	});
 	edit.focus();
 	bindKeys(edit);
@@ -265,7 +277,7 @@ function bindKeys(edit: any) {
 
 	});
 	edit.on('text-change', function (delta, source) {
-		save();
+		//save();
 	});
 
 }
