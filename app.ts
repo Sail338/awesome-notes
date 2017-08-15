@@ -119,8 +119,8 @@ function compileAndRunJava(code: any, notes: HTMLDivElement) {
 
 	)
 }
-function compileAndRunJavaScript(code:any,notes:HTMLDivElement){
-	
+function compileAndRunJavaScript(code: any, notes: HTMLDivElement) {
+
 	fs.writeFile(".tmp.js", code, (err: any) => {
 		if (err) {
 			console.error(err);
@@ -147,14 +147,28 @@ function compileAndRunJavaScript(code:any,notes:HTMLDivElement){
 }
 function appendToStdOut(stdout: string, notes: HTMLDivElement) {
 	if (stdout) {
+		
 		console.log("reached hard")
-		var heading = document.createElement('p');
-		heading.innerHTML = stdout;
-		console.log(stdout)
-		console.log(heading.innerHTML)
-		notes.appendChild(heading)
+		var di = document.createElement("div")
+		notes.appendChild(di)
+	
+	
+		var edit = new Quill(di, {
+		theme: 'bubble'
+	
+		});
+		edit.setText(stdout)
+		edit.format('code',true)
+		edit.format('code-block',true)
+
+		edit.disable()
+		notes.focus();
+
+	
+		//di.appendChild(heading)
 
 	}
+		
 }
 
 hljs.configure({   // optionally configure hljs
@@ -162,13 +176,12 @@ hljs.configure({   // optionally configure hljs
 });
 function createNewCodeBlock() {
 
-	var div = document.createElement('div');
 	var heading = document.createElement('h3');
 	var notes = document.createElement('div');
 
 
 
-	div.appendChild(notes);
+
 	document.body.appendChild(notes);
 	var basiceditor = new Quill(notes, {
 		modules: {
@@ -177,7 +190,7 @@ function createNewCodeBlock() {
 		theme: 'bubble'
 	});
 
-	basiceditor.format('code-block', 'code-block');
+	basiceditor.format('code-block', true);
 	basiceditor.focus();
 	bindKeys(basiceditor);
 	bindCode(basiceditor, notes);
@@ -187,13 +200,13 @@ function createNewCodeBlock() {
 
 function createTextBlock() {
 
-	var div = document.createElement('div');
-	var heading = document.createElement('h3');
+
+
 	var notes = document.createElement('div');
 
 
 
-	div.appendChild(notes);
+	
 	document.body.appendChild(notes);
 	var edit = new Quill(notes, {
 		theme: 'bubble'
@@ -308,10 +321,10 @@ function compileCode(code: any, notes: HTMLDivElement) {
 	else if (lang === 'c') {
 		compileAndRunC(code, notes);
 	}
-		else if(lang === 'javascript'){
-			compileAndRunJavaScript(code,notes);
+	else if (lang === 'javascript') {
+		compileAndRunJavaScript(code, notes);
 
-			}
+	}
 
 
 }
@@ -335,7 +348,7 @@ function parseFirstLine(inputStr: string) {
 	for (var j = 0; j < comments.length; j++) {
 		console.log(comments[j])
 		if (inputStr.includes(comments[j])) {
-			
+
 			doesFirstLineContain = true;
 		}
 	}
@@ -345,7 +358,7 @@ function parseFirstLine(inputStr: string) {
 	console.log("got here")
 	for (var i = 0; i < langs.length; i++) {
 		if (inputStr.includes(langs[i])) {
-			
+
 			if (inputStr.includes('java') && !inputStr.includes('javascript')) {
 				return 'java'
 			}
