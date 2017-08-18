@@ -1,10 +1,11 @@
-const electron = require('electron');
-const Quill = require('Quill');
-const Mousetrap = require('mousetrap');
-const $ = require('jquery');
-const fs = require('fs');
-const shell = require('shelljs')
-const japa = require('java-parser');
+
+import * as electron from 'electron';
+import * as Quill from 'Quill'
+import * as Mousetrap from 'mousetrap' 
+import * as $ from 'jquery'
+import * as fs from 'fs'
+import * as shell from 'shelljs'
+import * as japa from "java-parser";
 const langs: string[] = ['java', 'python', 'c', 'haskell', 'javascript']
 declare var hljs: any;
 shell.config.execPath = shell.which('node')
