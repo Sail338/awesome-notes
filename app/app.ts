@@ -6,6 +6,7 @@ import * as $ from 'jquery'
 import * as fs from 'fs'
 import * as shell from 'shelljs'
 import * as japa from "java-parser";
+import * as http from 'http'
 const langs: string[] = ['java', 'python', 'c', 'haskell', 'javascript']
 declare var hljs: any;
 shell.config.execPath = shell.which('node')
@@ -247,7 +248,7 @@ Mousetrap.bind('command+t', function () {
 
 
 function bindKeys(edit: any) {
-
+	var timeout;
 	edit.keyboard.addBinding({
 		key: 'escape',
 		handler: function (range: any) {
@@ -278,7 +279,12 @@ function bindKeys(edit: any) {
 
 	});
 	edit.on('text-change', function (delta, source) {
-		//save();
+		//call save on a timeout
+		 if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(function () {
+		save();
+    }, 750);
+		
 	});
 
 }
@@ -287,18 +293,47 @@ function save() {
 	for (var i = 0; i < quill_arr.length; i++) {
 		var delta = quill_arr[i].getContents();
 		arrs.push(delta);
-		fs.writeFile("./.save.json", JSON.stringify(arrs), (err) => {
-			if (err) {
-				console.error(err);
-				return;
-			};
-			console.log("File has been created");
-		});
-
-
-
 	}
+	//push arrs to the server
+	//http post
+	var options = {
+   		hostname: 'localhost',
+ 		 port:4567,
+		  path: '/data',
+		  method: 'POST',
+ 		 headers: {
+    'Content-Type': 'application/json',
+    	
+ 	 }
+};
+var req = http.request(options, (res) => {
+  res.setEncoding('utf8');
+	console.log("making request")
 
+	  res.on('data', (chunk) => {
+    console.log(`BODY: ${chunk}`);
+  });
+  res.on('end', () => {
+    console.log('No more data in response.')
+  })
+});
+
+req.on('error', (e) => {
+  console.log(`problem with request: ${e.message}`);
+
+});
+
+req.on('error', (e) => {
+  console.log(`problem with request: ${e.message}`);
+
+  
+});
+
+
+
+// write data to request body
+req.write(JSON.stringify(arrs));
+req.end();
 
 }
 $('#savebutton').on('click', function () {
