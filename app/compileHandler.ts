@@ -1,3 +1,4 @@
+//Handles the compilation and running of all file
 import * as shell from 'shelljs'
 import * as fs from 'fs'
 import * as Quill from 'Quill'
@@ -9,13 +10,14 @@ exports.compileAndRunPython = function (code: any, notes: HTMLDivElement) {
 			return;
 		};
 		console.log("File has been created");
-		var child = shell.exec('python .python.py').stdout;
+		const child = shell.exec('python .python.py').stdout;
 		shell.exec('python .python.py', function (code, stdout: string, stderr) {
 			if (stderr) {
 				alert("Error Occured:" + stderr);
 			}
 
-			appendToStdOut(stdout, notes);
+            appendToStdOut(stdout, notes);
+        
 		});
 	});
 
@@ -75,9 +77,9 @@ exports.compileAndRunHaskell = function (code: any, notes: HTMLDivElement) {
 
 }
 exports.compileAndRunJava = function (code: any, notes: HTMLDivElement) {
-	var jtree = japa.parse(code)
+	const jtree = japa.parse(code)
 	console.log(jtree)
-	var clasname = jtree.types[0].name.identifier;
+	const clasname = jtree.types[0].name.identifier;
 	if (clasname === null) {
 		alert("Invalid ClassName try again")
 		return;
@@ -140,19 +142,19 @@ function appendToStdOut(stdout: string, notes: HTMLDivElement) {
 	if (stdout) {
 				
 		console.log("reached hard")
-		var di = document.createElement("div")
+		const di = document.createElement("div")
 		//var hr = document.createElement("hr")
-		var out = document.createElement("h1")
+		const out = document.createElement("h1")
 		out.innerHTML = "Output:"
 		di.appendChild(out);
-		var div = document.createElement("div")
+		const div = document.createElement("div")
 		out.appendChild(div)
 	
 		//di.appendChild(hr)
 		notes.appendChild(di)
 		
 	
-		var edit = new Quill(div, {
+		const edit = new Quill(div, {
 		theme: 'bubble'
 	
 		});

@@ -24,7 +24,7 @@ function createNewCodeBlock() {
 
 
 	document.body.appendChild(notes);
-	var basiceditor = new Quill(notes, {
+	const basiceditor = new Quill(notes, {
 		modules: {
 			syntax: true ,
 			toolbar:false            // Include syntax module
@@ -44,13 +44,13 @@ function createTextBlock() {
 
 
 
-	var notes = document.createElement('div');
+	const notes = document.createElement('div');
 
 
 	
 	
 	document.body.appendChild(notes);
-	var edit = new Quill(notes, {
+	const edit = new Quill(notes, {
 		theme: 'snow',
 		  "modules": {
      		 "toolbar": false
@@ -127,7 +127,7 @@ function save() {
 	}
 	//push arrs to the server
 	//http post
-	var options = {
+	const options = {
    		hostname: 'localhost',
  		 port:4567,
 		  path: '/data',
@@ -137,7 +137,7 @@ function save() {
     	
  	 }
 };
-var req = http.request(options, (res) => {
+const req = http.request(options, (res) => {
   res.setEncoding('utf8');
 	console.log("making request")
  
