@@ -3,13 +3,14 @@
 
        
         "module": "commonjs",
+        "sourceMap": true,
         "target":"es2016"
        
     },
 
        
     "include": [
-        "app/*"
+        "app/*.ts"
     ]
 
 }
