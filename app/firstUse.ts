@@ -14,7 +14,10 @@ function checkPath(p:string){
     }
     });
 }
+/**
+ * navigates to the sign in page if its first use
+ */
 //open the first use page
 function openFirstUseServer(){
-    
+     
 }
