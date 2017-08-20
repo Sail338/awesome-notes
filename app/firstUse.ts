@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as electron from 'electron'
 
-function checkPath(p:string){
+exports.checkPath = function(p:string){
    fs.stat('.firstuse.json', function(err, stat) {
     if(err == null) {
         //file DNE
