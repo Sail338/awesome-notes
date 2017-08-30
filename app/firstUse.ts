@@ -1,31 +1,31 @@
 import * as fs from 'fs'
 import * as electron from 'electron'
 
-exports.checkPath = function(p:string){
-   fs.stat('.firstuse.json', function(err, stat) {
-    if(err == null) {
-        //file DNE
-        return;
-    } else if(err.code == 'ENOENT') {
-        // file does not exist
-
+exports.checkPath = function (p: string) {
+  fs.stat('.firstuse.json', function (err, stat) {
+    if (err == null) {
+      
+      return;
+    } else if (err.code == 'ENOENT') {
+      // file does not exist
+      openFirstUse();
     } else {
-        console.log('Some other error: ', err.code);
+      console.log('Some other error: ', err.code);
     }
-    });
+  });
 }
 /**
  * navigates to the sign in page if its first use
  */
 //open the first use page
-function openFirstUse(){
+function openFirstUse() {
   let mainWindow;
   createWindow();
 
 }
-function createWindow () {
+function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({ width: 800, height: 600 })
   mainWindow.openDevTools();
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -46,3 +46,15 @@ function createWindow () {
     mainWindow = null
   })
 }
+
+
+
+function sendLoginForm(event){
+    event.preventDefault();
+    let form = document.getElementById("loginform");
+    electron.ipcRenderer.send('form-submission',form)
+}
+
+electron.ipcMain.on('form-submission', function (event, form) {
+    
+});
