@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as electron from 'electron'
-
+import * as http from 'http'
 exports.checkPath = function (p: string) {
   fs.stat('.firstuse.json', function (err, stat) {
     if (err == null) {
@@ -56,5 +56,33 @@ function sendLoginForm(event){
 }
 
 electron.ipcMain.on('form-submission', function (event, form) {
-    
+    //make a post request
+    	const options = {
+   		hostname: 'localhost',
+ 		  port:4567,
+		  path: '/firstuse',
+		  method: 'POST',
+ 		 headers: {
+    'Content-Type': 'multipart/form-data',
+    	
+ 	 }
+};
+const req = http.request(options, (res) => {
+  res.setEncoding('utf8');
+	console.log("making request")
+ 
+});
+
+req.on('error', (e) => {
+  console.log(`problem with request: ${e.message}`);
+
+});
+
+
+
+
+
+// write data to request body
+req.write(form);
+req.end();
 });
