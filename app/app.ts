@@ -139,6 +139,13 @@ function save() {
 		arrs.push(save_data);
 	}
 		//write data to a json file
+		fs.writeFile(".curr.json", JSON.stringify(arrs), (err: any) => {
+			if (err) {
+				console.error(err);
+				return;
+			};
+	
+		})
 }
 $('#savebutton').on('click', function () {
 	save();
