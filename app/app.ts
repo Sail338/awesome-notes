@@ -41,6 +41,7 @@ function createNewCodeBlock() {
 		"data":basiceditor
 	}
 	quill_arr.push(push);
+	return basiceditor
 }
 
 
@@ -68,6 +69,7 @@ function createTextBlock() {
 
 	}
 	quill_arr.push(push);
+	return edit
 
 }
 
@@ -151,9 +153,20 @@ $('#savebutton').on('click', function () {
 	save();
 });
 //given an array load it in
-function loadJSON(){
-
-
+function loadJSON(savefile:string){
+//load syncnously 
+	let datfile = fs.readFileSync(savefile,'utf8')	
+	let jsondat = JSON.parse(datfile)
+	jsondat.array.forEach(element => {
+		if(element.type === 'code'){
+			let currentcodeblock = createNewCodeBlock()
+			currentcodeblock.getContents().compose(element.data)
+		}
+		else if(element.type === "text"){
+			let currenttextblock = createTextBlock()
+			currenttextblock.getContents().compose(element.data)
+		}		
+	});
 
 }
 //this functions compiles a selection of code
