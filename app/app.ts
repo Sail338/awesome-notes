@@ -36,7 +36,11 @@ function createNewCodeBlock() {
 	basiceditor.focus();
 	bindKeys(basiceditor);
 	bindCode(basiceditor, notes);
-	quill_arr.push(basiceditor);
+	let push = {
+		"type":"code",
+		"data":basiceditor
+	}
+	quill_arr.push(push);
 }
 
 
@@ -58,8 +62,12 @@ function createTextBlock() {
 	});
 	edit.focus();
 	bindKeys(edit);
+	let push = {
+		"type":"text",
+		"data":edit
 
-	quill_arr.push(edit);
+	}
+	quill_arr.push(push);
 
 }
 
@@ -122,45 +130,25 @@ function bindKeys(edit: any) {
 function save() {
 	var arrs = []
 	for (var i = 0; i < quill_arr.length; i++) {
-		var delta = quill_arr[i].getContents();
-		arrs.push(delta);
+		var delta = quill_arr[i];
+		let save_data = {
+			"type":delta.type,
+			"data":delta.data.getContents()
+		}
+		console.log(save_data)
+		arrs.push(save_data);
 	}
-	//push arrs to the server
-	//http post
-	const options = {
-   		hostname: 'localhost',
- 		 port:4567,
-		  path: '/data',
-		  method: 'POST',
- 		 headers: {
-    'Content-Type': 'application/json',
-    	
- 	 }
-};
-const req = http.request(options, (res) => {
-  res.setEncoding('utf8');
-	console.log("making request")
- 
-});
-
-req.on('error', (e) => {
-  console.log(`problem with request: ${e.message}`);
-
-});
-
-
-
-
-
-// write data to request body
-req.write(JSON.stringify(arrs));
-req.end();
-
+		//write data to a json file
 }
 $('#savebutton').on('click', function () {
 	save();
 });
+//given an array load it in
+function loadJSON(){
 
+
+
+}
 //this functions compiles a selection of code
 function compileCode(code: any, notes: HTMLDivElement) {
 	console.log(code)
