@@ -7,6 +7,7 @@ import * as fs from 'fs'
 import * as shell from 'shelljs'
 import * as japa from "java-parser";
 import * as http from 'http'
+import * as Store from 'electron-store'
 const compile = require('./compileHandler')
 const langs: string[] = ['java', 'python', 'c', 'haskell', 'javascript']
 declare var hljs: any;
@@ -131,6 +132,7 @@ function bindKeys(edit: any) {
 }
 function save() {
 	var arrs = []
+	
 	for (var i = 0; i < quill_arr.length; i++) {
 		var delta = quill_arr[i];
 		let save_data = {
@@ -140,8 +142,14 @@ function save() {
 		console.log(save_data)
 		arrs.push(save_data);
 	}
+	let store = new Store();
+	let lang = store.get('lang')
+	let save = {
+		"lang":lang,
+		"data":arrs
+	}
 		//write data to a json file
-		fs.writeFile(".curr.json", JSON.stringify(arrs), (err: any) => {
+		fs.writeFile(".curr.json", JSON.stringify(save), (err: any) => {
 			if (err) {
 				console.error(err);
 				return;
@@ -157,7 +165,11 @@ function loadJSON(savefile:string){
 //load syncnously 
 	let datfile = fs.readFileSync(savefile,'utf8')	
 	let jsondat = JSON.parse(datfile)
-	jsondat.array.forEach(element => {
+	//set current language
+
+	let store = new Store();
+	store.set('lang',jsondat.lang)
+	jsondat.data.forEach(element => {
 		if(element.type === 'code'){
 			let currentcodeblock = createNewCodeBlock()
 			currentcodeblock.getContents().compose(element.data)
