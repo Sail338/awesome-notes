@@ -143,13 +143,13 @@ function save() {
 		arrs.push(save_data);
 	}
 	let store = new Store();
-	let lang = store.get('lang')
-	let save = {
+	const lang = store.get('lang')
+	const  save = {
 		"lang":lang,
 		"data":arrs
 	}
 		//write data to a json file
-		fs.writeFile(".curr.json", JSON.stringify(save), (err: any) => {
+		fs.writeFile(store.get("currfile"), JSON.stringify(save), (err: any) => {
 			if (err) {
 				console.error(err);
 				return;
@@ -163,8 +163,8 @@ $('#savebutton').on('click', function () {
 //given an array load it in
 function loadJSON(savefile:string){
 //load syncnously 
-	let datfile = fs.readFileSync(savefile,'utf8')	
-	let jsondat = JSON.parse(datfile)
+	const datfile = fs.readFileSync(savefile,'utf8')	
+	const jsondat = JSON.parse(datfile)
 	//set current language
 
 	let store = new Store();
@@ -175,7 +175,7 @@ function loadJSON(savefile:string){
 			currentcodeblock.getContents().compose(element.data)
 		}
 		else if(element.type === "text"){
-			let currenttextblock = createTextBlock()
+			const currenttextblock = createTextBlock()
 			currenttextblock.getContents().compose(element.data)
 		}		
 	});
